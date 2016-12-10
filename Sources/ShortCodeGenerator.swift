@@ -6,6 +6,14 @@
 //  Copyright © 2016 Reid Chatham. All rights reserved.
 //
 
+import Foundation
+
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
+
 /**
  Struct consisting entirely of static stateless contructors for generating unique short codes.
  */
@@ -19,25 +27,38 @@ public struct ShortCodeGenerator {
         var code = ""
         let base = min(base, maxBase)
         for _ in 0..<length {
-            let random = Int(arc4random_uniform(base))
-            code.append(base62chars[random])
+            #if os(Linux)
+                let rand = Int(random() % (base))
+            #else
+                let rand = Int(arc4random_uniform(base))
+            #endif
+            code.append(base62chars[rand])
         }
         return code
     }
     
-    public static func getCode(withBase base: UInt32 = maxBase, length: Int, uniquenessCheck: (String->Bool) = {_ in true}, retryLimit limit: Int? = nil) -> String? {
+    public static func getCode(withBase base: UInt32 = maxBase, length: Int, retryLimit limit: Int? = nil, uniquenessCheck: (String)->Bool = {_ in true}) -> String? {
         
         guard limit != nil ? limit! > 0 : true else { return nil }
         
         var code = ""
         let base = min(base, maxBase)
         for _ in 0..<length {
-            let random = Int(arc4random_uniform(base))
-            code.append(base62chars[random])
+            #if os(Linux)
+                let rand = Int(random() % (base))
+            #else
+                let rand = Int(arc4random_uniform(base))
+            #endif
+            code.append(base62chars[rand])
         }
         
         if !uniquenessCheck(code) {
-            return getCode(withBase: base, length: length, uniquenessCheck: uniquenessCheck, retryLimit: limit != nil ? limit!-1 : nil)
+            return getCode(
+                withBase: base,
+                length: length,
+                retryLimit: limit != nil ? limit!-1 : nil,
+                uniquenessCheck: uniquenessCheck
+            )
         }
         return code
     }
@@ -69,11 +90,11 @@ public struct ShortCodeGenerator {
         return code
     }
     
-    public static func convertDateToBase62(date: NSDate) -> String {
+    public static func convertDateToBase62(date: Date) -> String {
         let timeIntervalSinceReferenceDate = date.timeIntervalSinceReferenceDate
         let milliseconds = Int(timeIntervalSinceReferenceDate * 1000)
         
-        return convertIntToBase62(milliseconds)
+        return convertIntToBase62(integer: milliseconds)
     }
     
     public static func convertCodeToInt(code: String, withBase base: Int) -> Int {
@@ -82,12 +103,12 @@ public struct ShortCodeGenerator {
         var int = 0
         
         let last = code.removeLast()
-        int += (base62chars.indexOf(last)!)
+        int += (base62chars.index(of: last)!)
         
         var i = base
         repeat {
             let last = code.removeLast()
-            int += ((base62chars.indexOf(last)!) * i)
+            int += ((base62chars.index(of: last)!) * i)
             i *= base
         } while !code.isEmpty
         
@@ -100,26 +121,26 @@ public struct ShortCodeGenerator {
         var int = 0
         
         let last = code.removeLast()
-        int += (base62chars.indexOf(last)!)
+        int += (base62chars.index(of: last)!)
         
         var i = 62
         repeat {
             let last = code.removeLast()
-            int += ((base62chars.indexOf(last)!) * i)
+            int += ((base62chars.index(of: last)!) * i)
             i *= 62
         } while !code.isEmpty
         
         return int
     }
     
-    public static func convertBase62Date(code: String) -> NSDate {
-        let int = convertBase62toInt(code)
-        return NSDate(timeIntervalSinceReferenceDate: Double(int)/1000)
+    public static func convertBase62Date(code: String) -> Date {
+        let int = convertBase62toInt(code: code)
+        return Date(timeIntervalSinceReferenceDate: Double(int)/1000)
     }
     
     public static func convertCode(code: String, withBase base1: Int, toCodeWithBase base2: Int) -> String {
-        let integer = convertCodeToInt(code, withBase: base1)
-        return convertInt(integer, toBase: base2)
+        let integer = convertCodeToInt(code: code, withBase: base1)
+        return convertInt(integer: integer, toBase: base2)
     }
 }
 

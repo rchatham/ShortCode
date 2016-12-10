@@ -9,5 +9,6 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.author             = { "Reid Chatham" => "reid.chatham@gmail.com" }
   s.source       = { :git => "https://github.com/rchatham/ShortCode.git", :tag => "#{s.version}" }
+  s.platform     = :ios, "8.0"
   s.source_files  = "Sources/*"
 end

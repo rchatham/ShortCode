@@ -1,5 +1,5 @@
 //
-//  ShortCodeGenerator.swift
+//  ShortCode.swift
 //  ShortCode
 //
 //  Created by Reid Chatham on 3/15/16.
@@ -17,7 +17,7 @@ import Foundation
 /**
  Struct consisting entirely of static stateless contructors for generating unique short codes.
  */
-public struct ShortCodeGenerator {
+public struct ShortCode {
     
     public static let base62chars = [Character]("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".characters)
     private static let maxBase : UInt32 = 62

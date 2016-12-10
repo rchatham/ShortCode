@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ShortCode"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "Short human-readable codes."
   s.description  = <<-DESC
   A tool for creating human-readable shortcodes for identification.

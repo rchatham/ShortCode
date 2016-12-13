@@ -1,5 +1,0 @@
-version: "Apple Swift version 3.0.1 (swiftlang-800.0.58.6 clang-800.0.42.1)"
-options: "19403bb29ef3ae8a1c23fb7c42311381"
-build_time: [534649654, 598935000]
-inputs:
-  "/Users/Reid/Developer/ShortCode/Sources/ShortCodeGenerator.swift": [534649251, 0]

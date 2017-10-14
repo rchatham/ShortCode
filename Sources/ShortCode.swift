@@ -22,7 +22,6 @@ public struct ShortCode {
     public static let base62chars = [Character]("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".characters)
     private static let maxBase : UInt32 = 62
     
-    
     public static func getCode(withBase base: UInt32 = maxBase, length: Int) -> String {
         var code = ""
         let base = min(base, maxBase)

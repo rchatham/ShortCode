@@ -28,7 +28,7 @@ public struct ShortCode {
         let base = min(base, maxBase)
         for _ in 0..<length {
             #if os(Linux)
-                let rand = Int(random() % (base))
+                let rand = Int(random() % Int(base))
             #else
                 let rand = Int(arc4random_uniform(base))
             #endif
